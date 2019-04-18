@@ -1,0 +1,25 @@
+{
+    "requests": [
+        {
+            "name": "test1",
+            "method": "get",
+            "url": "https://foglalas.ritek.hu/login/login.php",
+            "static": true
+        },
+        {
+            "name": "fail",
+            "method": "get",
+            "url": "httdsadsa.php",
+            "static": true
+        },
+        {
+            "name":"test2",
+            "method": "post",
+            "url": "https://foglalas.ritek.hu/rights/getnaplo.php",
+            "static": false,
+            "parameters": [
+                "search"
+            ]
+        }
+    ]
+}
