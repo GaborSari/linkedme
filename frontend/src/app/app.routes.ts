@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { MoviesComponent } from './components/movies.component/movies.component';
+import { TestComponent } from './components/test.component/test.component';
 
 const appRoutes: Routes = [
     {
       path: '',
-      component: MoviesComponent
+      component: TestComponent
     }
   ];
 
-  export const APP_ROUTES = appRoutes;
+export const APP_ROUTES = appRoutes;

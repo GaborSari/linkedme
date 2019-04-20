@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MovieService } from 'src/app/services/movie.service';
+import { HttpService } from 'src/app/services/http.service';
 
 @Component({
   selector: 'app',
@@ -8,8 +8,8 @@ import { MovieService } from 'src/app/services/movie.service';
 export class AppComponent {
   clientHeight = window.innerHeight;
   public loaded = false;
-  constructor(private movieService:MovieService){
-    this.movieService.loaded.subscribe(loaded=>{
+  constructor(private httpService:HttpService){
+    this.httpService.loaded.subscribe(loaded=>{
       this.loaded = loaded;
     });
   }
