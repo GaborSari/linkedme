@@ -6,16 +6,18 @@ import { RouterModule } from '@angular/router';
 import { APP_ROUTES } from './app.routes';
 import { HeaderComponent } from './components/header.component/header.component';
 import { FooterComponent } from './components/footer.component/footer.component';
-import { TestComponent } from './components/test.component/test.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { LoginComponent } from './components/login.component/login.component';
+import { RegistrationComponent } from './components/registration.component/registration.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
-	TestComponent
+  LoginComponent,
+  RegistrationComponent
   ],
   imports: [
     BrowserModule,

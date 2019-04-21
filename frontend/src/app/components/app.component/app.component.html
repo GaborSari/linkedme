@@ -5,10 +5,14 @@
     </div>
   </div>
   <div class="row">
-    <div class="fourteen wide column">
-      <div class="ui raised segment" [style.min-height]="clientHeight-100 + 'px'">
+    <div class="eleven wide column">
+      <div class="ui raised segment" [style.min-height]="clientHeight-100 +
+        'px'">
         <router-outlet></router-outlet>
       </div>
+    </div>
+    <div class="three wide column">
+      <login></login>
     </div>
   </div>
   <div class="row">

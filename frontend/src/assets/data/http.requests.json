@@ -1,24 +1,13 @@
 {
     "requests": [
         {
-            "name": "test1",
-            "method": "get",
-            "url": "https://foglalas.ritek.hu/login/login.php",
-            "static": true
-        },
-        {
-            "name": "fail",
-            "method": "get",
-            "url": "httdsadsa.php",
-            "static": true
-        },
-        {
-            "name":"test2",
+            "name":"login",
             "method": "post",
-            "url": "https://foglalas.ritek.hu/rights/getnaplo.php",
+            "url": "http://127.0.0.1/edsa-test/index.php",
             "static": false,
             "parameters": [
-                "search"
+                "username",
+                "password"
             ]
         }
     ]

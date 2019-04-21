@@ -2,14 +2,14 @@ import { Component, HostListener } from '@angular/core';
 
 
 @Component({
-  templateUrl: './test.component.html'
+  templateUrl: './registration.component.html'
 })
-export class TestComponent {
+export class RegistrationComponent {
 
 
   constructor() {
 
   }
 
-  
+
 }

@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { TestComponent } from './components/test.component/test.component';
+import { RegistrationComponent } from './components/registration.component/registration.component';
 
 const appRoutes: Routes = [
     {
       path: '',
-      component: TestComponent
+      component: RegistrationComponent
     }
   ];
 

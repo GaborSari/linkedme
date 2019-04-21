@@ -26,8 +26,8 @@ enum RequestMethod {
 export class HttpService {
 
     private CHARSET = 'UTF-8';
-    private CONTENT_TYPE = ContentType.FORM;
-    private HEADERS = new HttpHeaders({ 'Content-Type': this.CONTENT_TYPE + this.CHARSET });
+    private CONTENT_TYPE = ContentType.JSON;
+    private HEADERS = new HttpHeaders({ 'Content-Type': this.CONTENT_TYPE + ';' + this.CHARSET });
     private SETTINGS_URL = '/assets/data/http.requests.json';
     private requests: Array<HttpRequest> = new Array<HttpRequest>();
     private staticResponses: Array<HttpResponse<JSON>> = new Array<HttpResponse<JSON>>();
@@ -132,12 +132,12 @@ export class HttpService {
         else if (parameteres) {
             let json;
             try {
-                json = JSON.parse(parameteres.toString());
+                json = JSON.stringify(parameteres);
             }
             catch (exception) {
                 throw Error('Can not make json from parameters (request: ' + request.name + ' , parameters: ' + parameteres);
             }
-            _parameters = JSON.parse(parameteres.toString());
+            _parameters = json;
         }
 
         if (parameteres === undefined && request.expectedParameters && request.expectedParameters.length) {
@@ -146,6 +146,7 @@ export class HttpService {
 
         let observable: Observable<any> = new Observable<any>();
         if (request.method === RequestMethod.POST) {
+            console.log(_parameters);
             observable = this.httpClient.post(request.url, _parameters, {
                 headers: this.HEADERS,
                 withCredentials: true

@@ -1,0 +1,23 @@
+<h3 class="ui top attached header">
+    Bejelentkezés
+</h3>
+<div class="ui attached segment">
+    <form class="ui form">
+        <div class="field">
+            <label>Felhasználónév</label>
+            <input type="text" name="username" [(ngModel)]="data.username">
+        </div>
+        <div class="field">
+            <label>Jelszó</label>
+            <input type="password" name="password" [(ngModel)]="data.password">
+        </div>
+        <div class="field">
+            <div class="ui toggle checkbox">
+                <input type="checkbox" tabindex="0" name="company"
+                    [(ngModel)]="data.company" class="hidden">
+                <label>Munkaadóként</label>
+            </div>
+        </div>
+        <button class="ui button" type="submit" (click)="login()">Bejelentkezés</button>
+    </form>
+</div>
