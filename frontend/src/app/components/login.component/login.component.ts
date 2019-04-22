@@ -12,7 +12,7 @@ export class LoginComponent implements AfterViewInit {
 
 
   public data = {};
-  user:any = {success:false};
+  user:any;
 
   public sent = false;
   constructor(private httpService:HttpService,private userService:UserService) {
