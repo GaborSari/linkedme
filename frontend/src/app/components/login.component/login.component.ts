@@ -1,5 +1,6 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
+import { UserService } from 'src/app/services/user.service';
 
 declare var $: any;
 
@@ -11,9 +12,13 @@ export class LoginComponent implements AfterViewInit {
 
 
   public data = {};
+  user:any = {success:false};
 
-  constructor(private httpService:HttpService) {
-
+  public sent = false;
+  constructor(private httpService:HttpService,private userService:UserService) {
+    this.userService.user.subscribe(user=>{
+      this.user = user;
+    });
   }
 
 
@@ -23,7 +28,8 @@ export class LoginComponent implements AfterViewInit {
 
   login(){
     this.httpService.request("login",this.data).subscribe(result=>{
-      console.log(result);
+      this.sent = true;
+      this.userService.user.next(result);
     });
   }
 }

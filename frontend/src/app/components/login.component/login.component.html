@@ -2,7 +2,8 @@
     Bejelentkezés
 </h3>
 <div class="ui attached segment">
-    <form class="ui form">
+    <p *ngIf="sent && !user.success">Hiba</p>
+    <form class="ui form" *ngIf="!user.success">
         <div class="field">
             <label>Felhasználónév</label>
             <input type="text" name="username" [(ngModel)]="data.username">
@@ -20,4 +21,7 @@
         </div>
         <button class="ui button" type="submit" (click)="login()">Bejelentkezés</button>
     </form>
+    <div *ngIf="user.success">
+        {{user.username}}
+    </div>
 </div>

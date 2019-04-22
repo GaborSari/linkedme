@@ -5,6 +5,12 @@
             "method": "post",
             "url": "http://127.0.0.1/edsa-test/index.php",
             "static": false
+        },
+        {
+            "name":"registration",
+            "method": "post",
+            "url": "http://127.0.0.1/edsa-test/index.php",
+            "static": false
         }
     ]
 }

@@ -1,1 +1,54 @@
-regist
+<form class="ui form">
+    <div class="field">
+        <label>Felhasználó név</label>
+        <input type="text" name="username" [(ngModel)]="data.username">
+    </div>
+    <div class="field">
+        <label>Jelszó</label>
+        <input type="password" name="password" [(ngModel)]="data.password">
+    </div>
+    <div class="field">
+        <div class="ui toggle checkbox">
+            <input type="checkbox" tabindex="0" name="company"
+                [(ngModel)]="data.isCompany" class="hidden">
+            <label>Munkaadóként</label>
+        </div>
+    </div>
+    <div *ngIf="data.isCompany">
+        <div class="field">
+            <label>Cím</label>
+            <input type="text" name="address" [(ngModel)]="data.address">
+        </div>
+        <div class="field">
+            <label>Weboldal</label>
+            <input type="text" name="webpage" [(ngModel)]="data.webpage">
+        </div>
+        <div class="field">
+            <label>Bemutatkozás</label>
+            <input type="text" name="details" [(ngModel)]="data.details">
+        </div>
+    </div>
+    <div *ngIf="!data.isCompany">
+        <div class="field">
+            <label>Születésnap</label>
+            <input type="date" name="birth" [(ngModel)]="data.birth">
+        </div>
+        <div class="field">
+            <label>CV</label>
+            <input type="text" name="cv" [(ngModel)]="data.cv">
+        </div>
+    </div>
+    <button style="margin-top:2%" class="ui button" (click)="regist()" type="submit">Regisztráció</button>
+</form>
+
+
+<div class="ui regist modal">
+    <i class="close icon"></i>
+    <div class="header">
+        Regisztráció
+    </div>
+    <div class="content">
+        <p *ngIf="result">Sikeres</p>
+        <p *ngIf="!result">Sikertelen</p>
+    </div>
+</div>
