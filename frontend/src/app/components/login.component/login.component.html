@@ -1,5 +1,8 @@
-<h3 class="ui top attached header">
+<h3 class="ui top attached header" *ngIf="!user.success">
     Bejelentkezés
+</h3>
+<h3 class="ui top attached header" *ngIf="user.success">
+    Felhasználó
 </h3>
 <div class="ui attached segment">
     <p *ngIf="sent && !user.success">Hiba</p>
