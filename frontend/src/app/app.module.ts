@@ -10,14 +10,18 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login.component/login.component';
 import { RegistrationComponent } from './components/registration.component/registration.component';
+import { HomeComponent } from './components/home.component/home.component';
+import { JobsComponent } from './components/jobs.component/jobs.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
-  LoginComponent,
-  RegistrationComponent
+    LoginComponent,
+    RegistrationComponent,
+    HomeComponent,
+    JobsComponent
   ],
   imports: [
     BrowserModule,
