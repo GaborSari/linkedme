@@ -8,13 +8,16 @@ import { UserService } from 'src/app/services/user.service';
 export class JobsComponent {
   data = {};
   user: any;
+
+
+  jobs = new Array<any>();
   constructor(private httpService: HttpService, private userService: UserService) {
     this.userService.user.subscribe(user => {
       this.user = user;
     });
     this.httpService.request('listJobs').subscribe(jobs=>{
-      console.log(jobs);
-    })
+      this.jobs = jobs;
+    });
   }
 
 

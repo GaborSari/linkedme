@@ -1,34 +1,75 @@
 
-<div class="ui divider"></div>
-<h4>Állás meghirdetés</h4>
-<form class="ui form" *ngIf="user.isCompany">
-    <div class="field">
-        <label>Állás neve</label>
-        <input type="text" name="name" [(ngModel)]="data.name">
+<div class="ui three centered cards">
+    <div class="ui card" *ngFor="let job of jobs">
+        <div class="content">
+            <div class="header">{{job.jobname}}</div>
+        </div>
+        <div class="content">
+            <h4 class="ui sub header">{{job.companyname}}</h4>
+            <div class="ui small feed">
+                <div class="event">
+                    <div class="content">
+                        <div class="summary">
+                            Fizetés: {{job.salary}}
+                        </div>
+                    </div>
+                </div>
+                <div class="event">
+                    <div class="content">
+                        Start: {{job.starts}} 
+                        <br>
+                        Vég: {{job.ends}}
+                    </div>
+                </div>
+                <div class="event">
+                    <div class="content">
+                        <div class="summary">
+                            Kapcsolat: {{job.hrname}}<br>
+                            Telefon: {{job.hrphone}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="extra content">
+            <button class="ui button">Jelentkezés</button>
+        </div>
     </div>
-    <div class="field">
-        <label>Cím</label>
-        <input type="text" name="address" [(ngModel)]="data.address">
-    </div>
-    <div class="field">
-        <label>Kezdés</label>
-        <input type="date" name="starts" [(ngModel)]="data.starts">
-    </div>
-    <div class="field">
-        <label>Vége</label>
-        <input type="date" name="ends" [(ngModel)]="data.ends">
-    </div>
-    <div class="field">
-        <label>Fizetés</label>
-        <input type="number" name="salary" [(ngModel)]="data.salary">
-    </div>
-    <div class="field">
-        <label>Max jelentkezések száma</label>
-        <input type="number" name="maxApplication"
-            [(ngModel)]="data.maxApplication">
-    </div>
-    <div class="field">
-        <button style="margin-top:2%" class="ui button" (click)="addJob()"
-            type="submit">Regisztráció</button>
-    </div>
-</form>
+</div>
+
+<div *ngIf="user.isCompany">
+
+    <div class="ui divider"></div>
+    <h4>Állás meghirdetés</h4>
+    <form class="ui form">
+        <div class="field">
+            <label>Állás neve</label>
+            <input type="text" name="name" [(ngModel)]="data.name">
+        </div>
+        <div class="field">
+            <label>Cím</label>
+            <input type="text" name="address" [(ngModel)]="data.address">
+        </div>
+        <div class="field">
+            <label>Kezdés</label>
+            <input type="date" name="starts" [(ngModel)]="data.starts">
+        </div>
+        <div class="field">
+            <label>Vége</label>
+            <input type="date" name="ends" [(ngModel)]="data.ends">
+        </div>
+        <div class="field">
+            <label>Fizetés</label>
+            <input type="number" name="salary" [(ngModel)]="data.salary">
+        </div>
+        <div class="field">
+            <label>Max jelentkezések száma</label>
+            <input type="number" name="maxApplication"
+                [(ngModel)]="data.maxApplication">
+        </div>
+        <div class="field">
+            <button style="margin-top:2%" class="ui button" (click)="addJob()"
+                type="submit">Regisztráció</button>
+        </div>
+    </form>
+</div>

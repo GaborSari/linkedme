@@ -1,6 +1,7 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { UserService } from 'src/app/services/user.service';
+import { Router } from '@angular/router';
 
 declare var $: any;
 
@@ -15,7 +16,7 @@ export class LoginComponent implements AfterViewInit {
   user = {success:false};
 
   public sent = false;
-  constructor(private httpService:HttpService,private userService:UserService) {
+  constructor(private httpService:HttpService,private userService:UserService,private router:Router) {
   }
 
 
@@ -28,6 +29,9 @@ export class LoginComponent implements AfterViewInit {
       this.sent = true;
       this.userService.user.next(result);
       this.user = result;
+      if(result.success){
+        this.router.navigate(['/jobs']);
+      }
     });
   }
 }
