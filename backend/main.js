@@ -3,7 +3,6 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
-
 const oracledb = require('oracledb');
 var connection = undefined;
 oracledb.outFormat = oracledb.OBJECT;
@@ -15,12 +14,11 @@ oracledb.getConnection(
 		connectString:
 			'(DESCRIPTION =(ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 4000))(CONNECT_DATA =(SID= kabinet)))'
 	},
-	function (err, _connection) {
+	function(err, _connection) {
 		if (err) {
 			console.error(err);
 			return;
-		}
-		else {
+		} else {
 			connection = _connection;
 			app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 		}
@@ -37,7 +35,7 @@ app.use(
 app.use(express.json());
 
 // POST method route
-app.post('/login', function (req, response) {
+app.post('/login', function(req, response) {
 	let responseObject = {};
 	let un = req.body.username;
 	let pw = req.body.password;
@@ -49,10 +47,7 @@ app.post('/login', function (req, response) {
 		sql = `SELECT username, password FROM companies where USERNAME = '${un}'`;
 	}
 
-	connection.execute(sql, (
-		err,
-		result
-	) => {
+	connection.execute(sql, (err, result) => {
 		if (err) {
 			console.error(err);
 			return;
@@ -66,11 +61,36 @@ app.post('/login', function (req, response) {
 		}
 		response.json(responseObject);
 	});
-
-
 });
 
-app.post('/registration', function (req, response) {
+app.get('/jobs', function(req, response) {
+	let arr = [];
+	let responseObject = {};
+	let sql = `SELECT name as JOBNAME, name as COMPANYNAME, starts, salary, phone FROM jobs, companies, hrs
+	 where companies.id = jobs.companyid and jobs.hr = hrs.id`;
+
+	connection.execute(sql, (err, result) => {
+		if (err) {
+			console.error(err);
+			return;
+		}
+		if (result.rows.length > 0) {
+			for (let i of result.rows) {
+				responseObject.jobname = i.JOBNAME;
+				responseObject.companyname = i.COMPANYNAME;
+				responseObject.starts = i.STARTS;
+				responseObject.salary = i.SALARY;
+				responseObject.hrphone = i.PHONE;
+				arr.push(responseObject);
+			}
+		} else {
+			responseObject.success = false;
+		}
+		response.json(arr);
+	});
+});
+
+app.post('/registration', function(req, response) {
 	let nw = {};
 	let sql = '';
 	let insert = '';
@@ -83,19 +103,16 @@ app.post('/registration', function (req, response) {
 		nw.isCompany = false;
 		nw.name = req.body.name;
 		sql = `SELECT username FROM seekers where USERNAME = '${nw.username}'`;
-		insert = `INSERT INTO seekers (username, password, birth, name, cv)  VALUES('${nw.username}', '${nw.password}', TO_DATE('${nw.birth}','yyyy-mm-dd'), '${nw.name}', utl_raw.cast_to_raw('${nw.cv}'))`
+		insert = `INSERT INTO seekers (username, password, birth, name, cv)  VALUES('${nw.username}', '${nw.password}', TO_DATE('${nw.birth}','yyyy-mm-dd'), '${nw.name}', utl_raw.cast_to_raw('${nw.cv}'))`;
 	} else {
 		nw.isCompany = req.body.isCompany;
 		nw.address = req.body.address;
 		nw.webpage = req.body.webpage;
 		nw.details = req.body.details;
-		sql = `SELECT username FROM companies where USERNAME = '${nw.username}'`
-		insert = `INSERT INTO companies (username, password, address, webpage, details)  VALUES('${nw.username}', '${nw.password}', '${nw.address}', '${nw.webpage}', '${nw.details}')`
+		sql = `SELECT username FROM companies where USERNAME = '${nw.username}'`;
+		insert = `INSERT INTO companies (username, password, address, webpage, details)  VALUES('${nw.username}', '${nw.password}', '${nw.address}', '${nw.webpage}', '${nw.details}')`;
 	}
-	connection.execute(sql, (
-		err,
-		result
-	) => {
+	connection.execute(sql, (err, result) => {
 		if (err) {
 			console.error(err);
 			return;
@@ -106,20 +123,14 @@ app.post('/registration', function (req, response) {
 			return;
 		}
 
-		connection.execute(
-			insert,
-			function (err, result) {
-				if (err) {
-					console.error(err);
-					return;
-				}
-				else {
-					responseObject.success = true;
-					response.json(responseObject);
-				}
+		connection.execute(insert, function(err, result) {
+			if (err) {
+				console.error(err);
+				return;
+			} else {
+				responseObject.success = true;
+				response.json(responseObject);
 			}
-		);
-
-
+		});
 	});
 });
