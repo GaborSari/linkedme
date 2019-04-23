@@ -3,7 +3,7 @@
         {
             "name":"login",
             "method": "post",
-            "url": "http://127.0.0.1/edsa-test/index.php",
+            "url": "http://localhost:3000/login",
             "static": false
         },
         {

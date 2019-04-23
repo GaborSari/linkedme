@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 var cors = require('cors');
 const app = express();
 const port = 3000;
@@ -11,8 +10,9 @@ app.use(
 	})
 );
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+
+app.use(express.json());
+
 
 // GET method route
 app.get('/', function(req, res) {
@@ -20,8 +20,8 @@ app.get('/', function(req, res) {
 });
 
 // POST method route
-app.post('/', function(req, res) {
-	console.log(req.body.username);
+app.post('/login', function(req, res) {
+	console.log(req.body);
 });
 
 app.post('/registration', function(req, res) {
