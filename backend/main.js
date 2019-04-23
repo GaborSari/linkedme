@@ -65,8 +65,10 @@ app.post('/login', function(req, response) {
 
 app.get('/jobs', function(req, response) {
 	let arr = [];
-	let responseObject = {};
-	let sql = `SELECT name as JOBNAME, name as COMPANYNAME, starts, salary, phone FROM jobs, companies, hrs
+	// let sql = `SELECT name as JOBNAME, name as COMPANYNAME, starts, salary, phone FROM jobs, companies, hrs
+	//  where companies.id = jobs.companyid and jobs.hr = hrs.id`;
+
+	let sql = `SELECT jobs.name as JOBNAME, companies.name as COMPANYNAME, starts, salary, phone FROM jobs, companies, hrs
 	 where companies.id = jobs.companyid and jobs.hr = hrs.id`;
 
 	connection.execute(sql, (err, result) => {
@@ -76,6 +78,7 @@ app.get('/jobs', function(req, response) {
 		}
 		if (result.rows.length > 0) {
 			for (let i of result.rows) {
+				let responseObject = {};
 				responseObject.jobname = i.JOBNAME;
 				responseObject.companyname = i.COMPANYNAME;
 				responseObject.starts = i.STARTS;
@@ -84,8 +87,10 @@ app.get('/jobs', function(req, response) {
 				arr.push(responseObject);
 			}
 		} else {
-			responseObject.success = false;
+			responseObject = null;
 		}
+		console.log(arr);
+
 		response.json(arr);
 	});
 });
