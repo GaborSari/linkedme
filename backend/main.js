@@ -77,12 +77,12 @@ app.post('/registration', function (req, res) {
 	nw.username = req.body.username;
 	nw.password = req.body.password;
 	if (req.body.isCompany == undefined || req.body.isCompany == false) {
-
-		nw.cv = Buffer.from(req.body.cv, "base64");
+		nw.cv = req.body.cv;
 		nw.birth = req.body.birth;
 		nw.isCompany = false;
+		nw.name = req.body.name;
 		sql = `SELECT username FROM seekers where USERNAME = '${nw.username}'`;
-		insert = `INSERT INTO seekers (username, password, birth, cv)  VALUES('${nw.uname}', '${nw.pw}', '${nw.birth}', '${nw.cv}')`
+		insert = `INSERT INTO seekers (username, password, birth,name, cv)  VALUES('${nw.username}', '${nw.password}',  TO_DATE('${nw.birth}','yyyy-mm-dd'),'${nw.name}' ,utl_raw.cast_to_raw('${nw.cv}'))`
 
 	} else {
 		nw.isCompany = req.body.isCompany;
