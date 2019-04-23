@@ -7,6 +7,7 @@ const port = 3000;
 const oracledb = require('oracledb');
 var connection = undefined;
 oracledb.outFormat = oracledb.OBJECT;
+oracledb.autoCommit = true;
 oracledb.getConnection(
 	{
 		user: 'h776447',
@@ -82,8 +83,8 @@ app.post('/registration', function (req, res) {
 		nw.isCompany = false;
 		nw.name = req.body.name;
 		sql = `SELECT username FROM seekers where USERNAME = '${nw.username}'`;
-		insert = `INSERT INTO seekers (username, password, birth,name, cv)  VALUES('${nw.username}', '${nw.password}',  TO_DATE('${nw.birth}','yyyy-mm-dd'),'${nw.name}' ,utl_raw.cast_to_raw('${nw.cv}'))`
-
+		insert = `INSERT INTO seekers (username, password, birth, name, cv)  VALUES('${nw.username}', '${nw.password}', TO_DATE('${nw.birth}','yyyy-mm-dd'), '${nw.name}', utl_raw.cast_to_raw('${nw.cv}'))`
+		console.error(insert);
 	} else {
 		nw.isCompany = req.body.isCompany;
 		nw.address = req.body.address;
@@ -108,7 +109,6 @@ app.post('/registration', function (req, res) {
 
 		connection.execute(
 			insert,
-			{ autoCommit: true },
 			function (err, result) {
 				if (err) {
 					console.error(err);
