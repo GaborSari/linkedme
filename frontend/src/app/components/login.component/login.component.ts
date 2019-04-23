@@ -12,13 +12,10 @@ export class LoginComponent implements AfterViewInit {
 
 
   public data = {};
-  user:any;
+  user = {success:false};
 
   public sent = false;
   constructor(private httpService:HttpService,private userService:UserService) {
-    this.userService.user.subscribe(user=>{
-      this.user = user;
-    });
   }
 
 
@@ -30,6 +27,7 @@ export class LoginComponent implements AfterViewInit {
     this.httpService.request("login",this.data).subscribe(result=>{
       this.sent = true;
       this.userService.user.next(result);
+      this.user = result;
     });
   }
 }
