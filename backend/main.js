@@ -70,7 +70,7 @@ app.post('/login', function (req, response) {
 
 });
 
-app.post('/registration', function (req, res) {
+app.post('/registration', function (req, response) {
 	let nw = {};
 	let sql = '';
 	let insert = '';
@@ -84,7 +84,6 @@ app.post('/registration', function (req, res) {
 		nw.name = req.body.name;
 		sql = `SELECT username FROM seekers where USERNAME = '${nw.username}'`;
 		insert = `INSERT INTO seekers (username, password, birth, name, cv)  VALUES('${nw.username}', '${nw.password}', TO_DATE('${nw.birth}','yyyy-mm-dd'), '${nw.name}', utl_raw.cast_to_raw('${nw.cv}'))`
-		console.error(insert);
 	} else {
 		nw.isCompany = req.body.isCompany;
 		nw.address = req.body.address;
