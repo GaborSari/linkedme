@@ -117,7 +117,9 @@ app.post('/addjob', function(req, response) {
 			console.error(err);
 			return;
 		}
-		nw.companyId = result.rows[0];
+		nw.companyId = result.rows[0].ID;
+		console.log(nw.companyId);
+
 		insert = `INSERT INTO jobs (name, companyid, address, starts, ends, salary, maxapplication)  VALUES('${nw.jobname}', '${nw.companyId}', '${nw.address}', '${nw.starts}', '${nw.ends}', '${nw.salary}', '${nw.maxApplication}')`;
 
 		connection.execute(insert, function(err, result) {
