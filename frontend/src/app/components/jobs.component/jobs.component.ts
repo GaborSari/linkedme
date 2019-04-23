@@ -15,17 +15,27 @@ export class JobsComponent {
     this.userService.user.subscribe(user => {
       this.user = user;
     });
-    this.httpService.request('listJobs').subscribe(jobs=>{
+    this.httpService.request('listJobs').subscribe(jobs => {
       this.jobs = jobs;
     });
   }
 
 
 
-  addJob(){
+  addJob() {
     this.data['companyUsername'] = this.user.username;
-    this.httpService.request('addJob',this.data).subscribe(result=>{
-      console.log(result);
+    this.httpService.request('addJob', this.data).subscribe(result => {
+      if (result.success) {
+        alert('sikeresen hozzáadva');
+        this.httpService.request('listJobs').subscribe(jobs => {
+
+          this.jobs = new Array<any>();
+          this.jobs = jobs;
+        });
+      }
+      else{
+        alert('hiba');
+      }
     })
   }
 

@@ -91,7 +91,6 @@ app.get('/jobs', function(req, response) {
 		} else {
 			responseObject = null;
 		}
-		console.log(arr);
 
 		response.json(arr);
 	});
@@ -117,9 +116,9 @@ app.post('/addjob', function(req, response) {
 			console.error(err);
 			return;
 		}
-		nw.companyId = result.rows[0];
-		insert = `INSERT INTO jobs (name, companyid, address, starts, ends, salary, maxapplication)  VALUES('${nw.jobname}', '${nw.companyId}', '${nw.address}', '${nw.starts}', '${nw.ends}', '${nw.salary}', '${nw.maxApplication}')`;
-
+		nw.companyId = result.rows[0].ID;
+		
+		insert = `INSERT INTO jobs (name, companyid, address, starts, ends, salary, maxapplication,hr)  VALUES('${nw.jobname}', ${nw.companyId}, '${nw.address}', TO_DATE('${nw.starts}','yyyy-mm-dd'), TO_DATE('${nw.ends}','yyyy-mm-dd'), ${nw.salary}, ${nw.maxApplication},1)`;
 		connection.execute(insert, function(err, result) {
 			if (err) {
 				console.error(err);
