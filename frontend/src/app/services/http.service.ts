@@ -27,7 +27,7 @@ export class HttpService {
 
     private CHARSET = 'UTF-8';
     private CONTENT_TYPE = ContentType.JSON;
-    private HEADERS = new HttpHeaders({ 'Content-Type': this.CONTENT_TYPE });
+    private HEADERS;
     private SETTINGS_URL = '/assets/data/http.requests.json';
     private requests: Array<HttpRequest> = new Array<HttpRequest>();
     private staticResponses: Array<HttpResponse<JSON>> = new Array<HttpResponse<JSON>>();
@@ -36,6 +36,7 @@ export class HttpService {
 
     constructor(private httpClient: HttpClient) {
         this.loadSettings();
+	this.setHeaders();
     }
 
     private loadSettings() {
@@ -44,9 +45,7 @@ export class HttpService {
                 if (json !== undefined && json != null) {
                     try {
                         for (const req of json["requests"]) {
-                            let newRequest: HttpRequest = new HttpRequest(req.method, req.url, {
-                                withCredentials: true
-                            });
+                            let newRequest: HttpRequest = new HttpRequest(req.method, req.url);
 
                             newRequest.expectedParameters = req.parameters;
                             newRequest.name = req.name;
@@ -69,6 +68,7 @@ export class HttpService {
 
     public setCharset(string: string) {
         this.CHARSET = string;
+        this.setHeaders();
     }
 
     public setContentType(type: ContentType) {
@@ -145,8 +145,9 @@ export class HttpService {
 
         let observable: Observable<any> = new Observable<any>();
         if (request.method === RequestMethod.POST) {
+            console.log(_parameters);
             observable = this.httpClient.post(request.url, _parameters, {
-		headers: this.HEADERS,
+                headers: this.HEADERS,
                 withCredentials: true
             });
         } else if (request.method == RequestMethod.GET || request.method == '') {
