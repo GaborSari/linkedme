@@ -6,10 +6,24 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './jobs.component.html'
 })
 export class JobsComponent {
+  data = {};
+  user: any;
+  constructor(private httpService: HttpService, private userService: UserService) {
+    this.userService.user.subscribe(user => {
+      this.user = user;
+    });
+    this.httpService.request('listJobs').subscribe(jobs=>{
+      console.log(jobs);
+    })
+  }
 
 
-  constructor(private httpService:HttpService,private userService:UserService) {
 
+  addJob(){
+    this.data['companyUsername'] = this.user.username;
+    this.httpService.request('addJob').subscribe(result=>{
+      console.log(result);
+    })
   }
 
 }

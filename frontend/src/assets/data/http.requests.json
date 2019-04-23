@@ -11,6 +11,19 @@
             "method": "post",
             "url": "http://localhost:3000/registration",
             "static": false
+        },
+        {
+            "name":"listJobs",
+            "method": "get",
+            "url": "http://localhost:3000/jobs",
+            "static": false
+        }
+        ,
+        {
+            "name":"addJob",
+            "method": "post",
+            "url": "http://localhost:3000/addjob",
+            "static": false
         }
     ]
 }
