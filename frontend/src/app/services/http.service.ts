@@ -36,7 +36,7 @@ export class HttpService {
 
     constructor(private httpClient: HttpClient) {
         this.loadSettings();
-	this.setHeaders();
+        this.setHeaders();
     }
 
     private loadSettings() {

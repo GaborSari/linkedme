@@ -26,5 +26,9 @@
     </form>
     <div *ngIf="user.success">
         {{user.username}}
+        <br>
+        {{user.email}}
+        <br>
+        <i *ngIf="data.company">munkaadó</i>
     </div>
 </div>

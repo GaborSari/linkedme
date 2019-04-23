@@ -29,4 +29,14 @@ export class RegistrationComponent implements AfterViewInit {
     $('.ui.checkbox').checkbox();
   }
 
+
+  handleFileInput(files: FileList) {
+    let reader = new FileReader();
+    reader.readAsDataURL(files.item(0));
+    reader.onload = (x) => {
+      console.log(x);
+      this.data['cv'] = reader.result;
+    }
+  }
+
 }

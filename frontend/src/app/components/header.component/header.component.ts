@@ -29,9 +29,12 @@ export class HeaderComponent {
 		this.userService.user.subscribe(user => {
 			this.menuItems = new Array<MenuItem>();
 			this.menuItems.push(new MenuItem("Kezdőlap", ""));
-			this.menuItems.push(new MenuItem("Regisztráció", "registration"));
+			
 			if (user.success) {
 				this.menuItems.push(new MenuItem("Munkák", "jobs"));
+			}
+			else{
+				this.menuItems.push(new MenuItem("Regisztráció", "registration"));
 			}
 			let url = this.route.url.split('/');
 			for (let item of this.menuItems) {

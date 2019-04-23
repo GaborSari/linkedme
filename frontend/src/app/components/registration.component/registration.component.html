@@ -35,10 +35,15 @@
         </div>
         <div class="field">
             <label>CV</label>
-            <input type="text" name="cv" [(ngModel)]="data.cv">
+            <input type="text">
+            <input type="file"
+                id="cv"
+                name="cv"
+                (change)="handleFileInput($event.target.files)">
         </div>
     </div>
-    <button style="margin-top:2%" class="ui button" (click)="regist()" type="submit">Regisztráció</button>
+    <button style="margin-top:2%" class="ui button" (click)="regist()"
+        type="submit">Regisztráció</button>
 </form>
 
 

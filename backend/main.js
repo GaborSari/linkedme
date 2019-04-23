@@ -1,28 +1,30 @@
 const express = require('express');
-var cors = require('cors');
+const cors = require('cors');
 const app = express();
 const port = 3000;
 
-let user = {
-	uname: '',
-	pw: '',
-	isCompany: false
-};
-let response = {
-	success: false,
-	username: '',
-	isCompany: false
-};
 
-var oracledb = require('oracledb');
-
-function checkCompany(p) {
-	return p || p == undefined;
-}
-
-function checkUser(name1, name2, pw1, pw2) {
-	return name1 == name2 && pw1 == pw2;
-}
+const oracledb = require('oracledb');
+var connection = undefined;
+oracledb.outFormat = oracledb.OBJECT;
+oracledb.getConnection(
+	{
+		user: 'h776447',
+		password: 'h776447',
+		connectString:
+			'(DESCRIPTION =(ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 4000))(CONNECT_DATA =(SID= kabinet)))'
+	},
+	function (err, _connection) {
+		if (err) {
+			console.error(err);
+			return;
+		}
+		else {
+			connection = _connection;
+			app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+		}
+	}
+);
 
 app.use(
 	cors({
@@ -33,97 +35,92 @@ app.use(
 
 app.use(express.json());
 
-// GET method route
-app.get('/', function(req, res) {
-	res.send('asd');
-});
-
 // POST method route
-app.post('/login', function(req, res) {
-	user.uname = req.body.username;
-	user.pw = req.body.password;
-	if (req.body.company == undefined || req.body.company == false) {
-		user.isCompany = false;
-	} else user.isCompany = true;
+app.post('/login', function (req, response) {
+	let responseObject = {};
+	let un = req.body.username;
+	let pw = req.body.password;
+	let sql = `SELECT username, password FROM seekers where USERNAME = '${un}'`;
 
-	// user.isCompany = res.body.company;
-	console.log(req.body);
+	let isCompany = false;
+	if (req.body.company != undefined && req.body.company == true) {
+		isCompany = true;
+		sql = `SELECT username, password FROM companies where USERNAME = '${un}'`;
+	}
 
-	// console.log(user);
-
-	oracledb.getConnection(
-		{
-			user: 'h776447',
-			password: 'h776447',
-			connectString:
-				'(DESCRIPTION =(ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 4000))(CONNECT_DATA =(SID= kabinet)))' // ez nemtom jó-e
-		},
-		function(err, connection) {
-			if (err) {
-				console.error(err);
-				return;
-			}
-
-			if (!user.isCompany) {
-				connection.execute(`SELECT username, password FROM seekers where USERNAME = '${user.uname}'`, function(
-					err,
-					result
-				) {
-					if (err) {
-						console.error(err);
-						return;
-					}
-					res = result.rows;
-					console.log(user);
-
-					if (res.length > 0 && checkUser(user.uname, res[0][0], user.pw, res[0][1])) {
-						response.success = true;
-						response.username = user.username;
-						response.isCompany = false;
-						console.log('sikeres bejelentkezés');
-					} else {
-						response.success = false;
-						response.username = '';
-						response.isCompany = false;
-						console.log('sikertelen bejelentkezés');
-					}
-
-					console.log(res[0]);
-				});
-			} else {
-				connection.execute(
-					`SELECT username, password FROM companies where USERNAME = '${user.uname}'`,
-					function(err, result) {
-						if (err) {
-							console.error(err);
-							return;
-						}
-						res = result.rows;
-						console.log(user);
-
-						if (res.length > 0 && checkUser(user.uname, res[0][0], user.pw, res[0][1])) {
-							response.success = true;
-							response.username = user.username;
-							response.isCompany = false;
-							console.log('sikeres bejelentkezés');
-						} else {
-							response.success = false;
-							response.username = '';
-							response.isCompany = false;
-							console.log('sikertelen bejelentkezés');
-						}
-
-						console.log(res[0]);
-					}
-				);
-			}
+	connection.execute(sql, (
+		err,
+		result
+	) => {
+		if (err) {
+			console.error(err);
+			return;
 		}
-	);
-	res.json(response);
+		if (result.rows.length > 0 && un == result.rows[0].USERNAME && pw == result.rows[0].PASSWORD) {
+			responseObject.success = true;
+			responseObject.username = un;
+			responseObject.isCompany = isCompany;
+		} else {
+			responseObject.success = false;
+		}
+		response.json(responseObject);
+	});
+
+
 });
 
-app.post('/registration', function(req, res) {
-	console.log(req.body);
-});
+app.post('/registration', function (req, res) {
+	let nw = {};
+	let sql = '';
+	let insert = '';
+	let responseObject = {};
+	nw.username = req.body.username;
+	nw.password = req.body.password;
+	if (req.body.isCompany == undefined || req.body.isCompany == false) {
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+		nw.cv = Buffer.from(req.body.cv, "base64");
+		nw.birth = req.body.birth;
+		nw.isCompany = false;
+		sql = `SELECT username FROM seekers where USERNAME = '${nw.username}'`;
+		insert = `INSERT INTO seekers (username, password, birth, cv)  VALUES('${nw.uname}', '${nw.pw}', '${nw.birth}', '${nw.cv}')`
+
+	} else {
+		nw.isCompany = req.body.isCompany;
+		nw.address = req.body.address;
+		nw.webpage = req.body.webpage;
+		nw.details = req.body.details;
+		sql = `SELECT username FROM companies where USERNAME = '${nw.username}'`
+		insert = `INSERT INTO companies (username, password, address, webpage, details)  VALUES('${nw.username}', '${nw.password}', '${nw.address}', '${nw.webpage}', '${nw.details}')`
+	}
+	connection.execute(sql, (
+		err,
+		result
+	) => {
+		if (err) {
+			console.error(err);
+			return;
+		}
+		if (result.rows.length > 0) {
+			responseObject.success = false;
+			response.json(responseObject);
+			return;
+		}
+
+		connection.execute(
+			insert,
+			{ autoCommit: true },
+			function (err, result) {
+				if (err) {
+					console.error(err);
+					return;
+				}
+				else {
+					responseObject.success = true;
+					response.json(responseObject);
+				}
+			}
+		);
+
+
+	});
+});
