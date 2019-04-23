@@ -24,7 +24,7 @@ export class JobsComponent {
 
   addJob(){
     this.data['companyUsername'] = this.user.username;
-    this.httpService.request('addJob').subscribe(result=>{
+    this.httpService.request('addJob',this.data).subscribe(result=>{
       console.log(result);
     })
   }
