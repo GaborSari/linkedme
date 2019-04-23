@@ -97,6 +97,41 @@ app.get('/jobs', function(req, response) {
 	});
 });
 
+app.post('/addjob', function(req, response) {
+	let nw = {};
+	let sql = '';
+	let insert = '';
+	let responseObject = {};
+	nw.jobname = req.body.name;
+	nw.address = req.body.address;
+	nw.starts = req.body.starts;
+	nw.ends = req.body.ends;
+	nw.salary = req.body.salary;
+	nw.maxApplication = req.body.maxApplication;
+	nw.companyUsername = req.body.companyUsername;
+
+	sql = `select id from companies where username = '${nw.companyUsername}'`;
+
+	connection.execute(sql, (err, result) => {
+		if (err) {
+			console.error(err);
+			return;
+		}
+		nw.companyId = result.rows[0];
+		insert = `INSERT INTO jobs (name, companyid, address, starts, ends, salary, maxapplication)  VALUES('${nw.jobname}', '${nw.companyId}', '${nw.address}', '${nw.starts}', '${nw.ends}', '${nw.salary}', '${nw.maxApplication}')`;
+
+		connection.execute(insert, function(err, result) {
+			if (err) {
+				console.error(err);
+				return;
+			} else {
+				responseObject.success = true;
+				response.json(responseObject);
+			}
+		});
+	});
+});
+
 app.post('/registration', function(req, response) {
 	let nw = {};
 	let sql = '';
