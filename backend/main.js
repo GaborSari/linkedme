@@ -104,12 +104,12 @@ app.post('/login', function(req, res) {
 						if (res.length > 0 && checkUser(user.uname, res[0][0], user.pw, res[0][1])) {
 							response.success = true;
 							response.username = user.username;
-							response.isCompany = false;
+							response.isCompany = true;
 							console.log('sikeres bejelentkezés');
 						} else {
 							response.success = false;
 							response.username = '';
-							response.isCompany = false;
+							response.isCompany = true;
 							console.log('sikertelen bejelentkezés');
 						}
 
