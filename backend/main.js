@@ -68,7 +68,7 @@ app.get('/jobs', function(req, response) {
 	// let sql = `SELECT name as JOBNAME, name as COMPANYNAME, starts, salary, phone FROM jobs, companies, hrs
 	//  where companies.id = jobs.companyid and jobs.hr = hrs.id`;
 
-	let sql = `SELECT jobs.name as JOBNAME, companies.name as COMPANYNAME, starts, salary, phone FROM jobs, companies, hrs
+	let sql = `SELECT jobs.name as JOBNAME, companies.name as COMPANYNAME, starts,ends, salary, phone, hrs.name as HRNAME FROM jobs, companies, hrs
 	 where companies.id = jobs.companyid and jobs.hr = hrs.id`;
 
 	connection.execute(sql, (err, result) => {
@@ -82,8 +82,10 @@ app.get('/jobs', function(req, response) {
 				responseObject.jobname = i.JOBNAME;
 				responseObject.companyname = i.COMPANYNAME;
 				responseObject.starts = i.STARTS;
+				responseObject.ends = i.ENDS;
 				responseObject.salary = i.SALARY;
 				responseObject.hrphone = i.PHONE;
+				responseObject.hrname = i.HRNAME;
 				arr.push(responseObject);
 			}
 		} else {
