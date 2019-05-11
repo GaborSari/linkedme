@@ -1,0 +1,27 @@
+<div class="ui cards">
+    <div class="card" *ngFor="let a of incomingapplications">
+        <div class="content">
+            <div class="header">
+                {{a.jname}}
+            </div>
+            <div class="meta">
+                Jelentkező: {{a.sname}}
+                <br>
+                Státusz: {{a.status}}
+            </div>
+            <div class="description">
+                <b>CV</b>
+                {{a.cv}}
+                <br>
+                <b>Comment:</b>
+                {{a.comment}}
+            </div>
+        </div>
+        <div class="extra content">
+            <div class="ui two buttons">
+                <div class="ui basic green button" (click)="approve(a.ID)">Elfogad</div>
+                <div class="ui basic red button" (click)="deny(a.ID)">Elutasít</div>
+            </div>
+        </div>
+    </div>
+</div>

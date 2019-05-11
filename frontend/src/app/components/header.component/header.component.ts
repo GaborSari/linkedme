@@ -32,6 +32,12 @@ export class HeaderComponent {
 			
 			if (user.success) {
 				this.menuItems.push(new MenuItem("Munkák", "jobs"));
+				if(!user.isCompany){
+					this.menuItems.push(new MenuItem("Jelentkezéseim", "myapplications"));
+				}
+				else{
+					this.menuItems.push(new MenuItem("Jelentkezések", "incomingapplications"));
+				}
 			}
 			else{
 				this.menuItems.push(new MenuItem("Regisztráció", "registration"));

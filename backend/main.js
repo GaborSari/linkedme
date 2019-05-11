@@ -14,7 +14,7 @@ oracledb.getConnection(
 		connectString:
 			'(DESCRIPTION =(ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 4000))(CONNECT_DATA =(SID= kabinet)))'
 	},
-	function(err, _connection) {
+	function (err, _connection) {
 		if (err) {
 			console.error(err);
 			return;
@@ -35,16 +35,16 @@ app.use(
 app.use(express.json());
 
 // POST method route
-app.post('/login', function(req, response) {
+app.post('/login', function (req, response) {
 	let responseObject = {};
 	let un = req.body.username;
 	let pw = req.body.password;
-	let sql = `SELECT username, password FROM seekers where USERNAME = '${un}'`;
+	let sql = `SELECT username, password, id FROM seekers where USERNAME = '${un}'`;
 
 	let isCompany = false;
 	if (req.body.company != undefined && req.body.company == true) {
 		isCompany = true;
-		sql = `SELECT username, password FROM companies where USERNAME = '${un}'`;
+		sql = `SELECT username, password, id FROM companies where USERNAME = '${un}'`;
 	}
 
 	connection.execute(sql, (err, result) => {
@@ -55,6 +55,7 @@ app.post('/login', function(req, response) {
 		if (result.rows.length > 0 && un == result.rows[0].USERNAME && pw == result.rows[0].PASSWORD) {
 			responseObject.success = true;
 			responseObject.username = un;
+			responseObject.id = result.rows[0].ID;
 			responseObject.isCompany = isCompany;
 		} else {
 			responseObject.success = false;
@@ -63,12 +64,12 @@ app.post('/login', function(req, response) {
 	});
 });
 
-app.get('/jobs', function(req, response) {
+app.get('/jobs', function (req, response) {
 	let arr = [];
 	// let sql = `SELECT name as JOBNAME, name as COMPANYNAME, starts, salary, phone FROM jobs, companies, hrs
 	//  where companies.id = jobs.companyid and jobs.hr = hrs.id`;
 
-	let sql = `SELECT jobs.name as JOBNAME, companies.name as COMPANYNAME, starts,ends, salary, phone, hrs.name as HRNAME FROM jobs, companies, hrs
+	let sql = `SELECT jobs.name as JOBNAME, jobs.id, companies.name as COMPANYNAME, starts,ends, salary, phone, hrs.name as HRNAME FROM jobs, companies, hrs
 	 where companies.id = jobs.companyid and jobs.hr = hrs.id`;
 
 	connection.execute(sql, (err, result) => {
@@ -79,6 +80,7 @@ app.get('/jobs', function(req, response) {
 		if (result.rows.length > 0) {
 			for (let i of result.rows) {
 				let responseObject = {};
+				responseObject.id = i.ID;
 				responseObject.jobname = i.JOBNAME;
 				responseObject.companyname = i.COMPANYNAME;
 				responseObject.starts = i.STARTS;
@@ -96,7 +98,7 @@ app.get('/jobs', function(req, response) {
 	});
 });
 
-app.post('/addjob', function(req, response) {
+app.post('/addjob', function (req, response) {
 	let nw = {};
 	let sql = '';
 	let insert = '';
@@ -117,9 +119,9 @@ app.post('/addjob', function(req, response) {
 			return;
 		}
 		nw.companyId = result.rows[0].ID;
-		
+
 		insert = `INSERT INTO jobs (name, companyid, address, starts, ends, salary, maxapplication,hr)  VALUES('${nw.jobname}', ${nw.companyId}, '${nw.address}', TO_DATE('${nw.starts}','yyyy-mm-dd'), TO_DATE('${nw.ends}','yyyy-mm-dd'), ${nw.salary}, ${nw.maxApplication},1)`;
-		connection.execute(insert, function(err, result) {
+		connection.execute(insert, function (err, result) {
 			if (err) {
 				console.error(err);
 				return;
@@ -131,7 +133,7 @@ app.post('/addjob', function(req, response) {
 	});
 });
 
-app.post('/registration', function(req, response) {
+app.post('/registration', function (req, response) {
 	let nw = {};
 	let sql = '';
 	let insert = '';
@@ -164,7 +166,7 @@ app.post('/registration', function(req, response) {
 			return;
 		}
 
-		connection.execute(insert, function(err, result) {
+		connection.execute(insert, function (err, result) {
 			if (err) {
 				console.error(err);
 				return;
@@ -175,3 +177,101 @@ app.post('/registration', function(req, response) {
 		});
 	});
 });
+
+
+
+
+
+app.post('/application', function (req, response) {
+	let responseObject = {};
+	let jobid = req.body.jobid;
+	let seekerid = req.body.seekerid;
+	let comment = req.body.comment;
+	let sql = `INSERT INTO applications (jobid,seekerid,text) values (${jobid},${seekerid},'${comment}')`;
+
+	connection.execute(sql, (err, result) => {
+		if (err) {
+			console.error(err);
+			responseObject.success = false;
+			response.json(responseObject);
+			return;
+		}
+		else {
+			responseObject.success = true;
+			response.json(responseObject);
+		}
+
+	});
+});
+
+
+
+
+app.post('/myapplications', function (req, response) {
+	let responseObject = {};
+	let seekerid = req.body.seekerid;
+	let sql = `SELECT accepted, jobs.name as jname  FROM applications, jobs WHERE seekerid = ${seekerid} and jobs.id = jobId`;
+
+	connection.execute(sql, (err, result) => {
+		if (err) {
+			console.error(err);
+			responseObject.success = false;
+			response.json(responseObject);
+			return;
+		}
+		else {
+			responseObject.success = true;
+			responseObject.applications = result.rows;
+			response.json(responseObject);
+		}
+
+	});
+});
+
+
+
+app.post('/incomingapplications', function (req, response) {
+	let responseObject = {};
+	let companyid = req.body.companyid;
+	
+	let sql = `SELECT applications.id ,applications.accepted as "status", seekers.name as "sname", jobs.name as "jname", utl_raw.cast_to_varchar2(seekers.cv) as "cv", applications.text as "comment" FROM applications,seekers,jobs WHERE jobid IN (select id from jobs where companyId = ${companyid}) and seekers.id = seekerid and jobs.id = jobid`;
+	connection.execute(sql, (err, result) => {
+		if (err) {
+			console.error(err);
+			responseObject.success = false;
+			response.json(responseObject);
+			return;
+		}
+		else {
+			responseObject.success = true;
+			responseObject.applications = result.rows;
+			response.json(responseObject);
+		}
+
+	});
+});
+
+
+
+app.post('/decideapplication', function (req, response) {
+	let responseObject = {};
+	let application = req.body.application;
+	let status = req.body.status;
+	let sql = `UPDATE applications SET accepted = ${status} where id = ${application}`;
+	console.log(sql);
+	connection.execute(sql, (err, result) => {
+		if (err) {
+			console.error(err);
+			responseObject.success = false;
+			response.json(responseObject);
+			return;
+		}
+		else {
+			responseObject.success = true;
+			response.json(responseObject);
+		}
+
+	});
+});
+
+

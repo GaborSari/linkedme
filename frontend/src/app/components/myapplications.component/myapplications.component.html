@@ -1,0 +1,15 @@
+<div class="ui cards">
+    <div class="card" *ngFor="let a of myapplications">
+        <div class="content">
+            <div class="header">
+                {{a.JNAME}}
+            </div>
+            <div class="meta">
+               Státusz:
+               <span *ngIf="a.ACCEPTED == null">?</span>
+               <span *ngIf="a.ACCEPTED == true">Elfogadva</span>
+               <span *ngIf="a.ACCEPTED == false">Elutasítva</span>
+            </div>
+        </div>
+    </div>
+</div>

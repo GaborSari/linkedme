@@ -12,6 +12,8 @@ import { LoginComponent } from './components/login.component/login.component';
 import { RegistrationComponent } from './components/registration.component/registration.component';
 import { HomeComponent } from './components/home.component/home.component';
 import { JobsComponent } from './components/jobs.component/jobs.component';
+import { MyapplicationsComponent } from './components/myapplications.component/myapplications.component';
+import { IncomingapplicationsComponent } from './components/incomingapplications.component/incomingapplications.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { JobsComponent } from './components/jobs.component/jobs.component';
     LoginComponent,
     RegistrationComponent,
     HomeComponent,
-    JobsComponent
+    JobsComponent,
+    MyapplicationsComponent,
+    IncomingapplicationsComponent
   ],
   imports: [
     BrowserModule,

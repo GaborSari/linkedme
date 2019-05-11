@@ -16,7 +16,7 @@
                 </div>
                 <div class="event">
                     <div class="content">
-                        Start: {{job.starts}} 
+                        Start: {{job.starts}}
                         <br>
                         Vég: {{job.ends}}
                     </div>
@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="extra content">
-            <button class="ui button">Jelentkezés</button>
+            <button class="ui button" (click)="showApplicationModal(job.id)">Jelentkezés</button>
         </div>
     </div>
 </div>
@@ -72,4 +72,19 @@
                 type="submit">Regisztráció</button>
         </div>
     </form>
+</div>
+
+<div class="ui application modal">
+    <i class="close icon"></i>
+    <div class="header">
+        Application
+    </div>
+    <div class="content" style="height:20vh;">
+        <textarea style="width:100%;height: 100%;">
+            {{comment}}
+        </textarea>
+    </div>
+    <div class="actions">
+        <div class="ui button" (click)="application()">Jelentkezés</div>
+    </div>
 </div>

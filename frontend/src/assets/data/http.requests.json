@@ -1,28 +1,51 @@
 {
     "requests": [
         {
-            "name":"login",
+            "name": "login",
             "method": "post",
             "url": "http://localhost:3000/login",
             "static": false
         },
         {
-            "name":"registration",
+            "name": "registration",
             "method": "post",
             "url": "http://localhost:3000/registration",
             "static": false
         },
         {
-            "name":"listJobs",
+            "name": "listJobs",
             "method": "get",
             "url": "http://localhost:3000/jobs",
             "static": false
-        }
-        ,
+        },
         {
-            "name":"addJob",
+            "name": "addJob",
             "method": "post",
             "url": "http://localhost:3000/addjob",
+            "static": false
+        },
+        {
+            "name": "application",
+            "method": "post",
+            "url": "http://localhost:3000/application",
+            "static": false
+        },
+        {
+            "name": "myapplications",
+            "method": "post",
+            "url": "http://localhost:3000/myapplications",
+            "static": false
+        },
+        {
+            "name": "incomingapplications",
+            "method": "post",
+            "url": "http://localhost:3000/incomingapplications",
+            "static": false
+        },
+        {
+            "name": "decideapplication",
+            "method": "post",
+            "url": "http://localhost:3000/decideapplication",
             "static": false
         }
     ]
