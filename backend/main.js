@@ -69,8 +69,17 @@ app.get('/jobs', function (req, response) {
 	// let sql = `SELECT name as JOBNAME, name as COMPANYNAME, starts, salary, phone FROM jobs, companies, hrs
 	//  where companies.id = jobs.companyid and jobs.hr = hrs.id`;
 
-	let sql = `SELECT jobs.name as JOBNAME, jobs.id, companies.name as COMPANYNAME, starts,ends, salary, phone, hrs.name as HRNAME FROM jobs, companies, hrs
-	 where companies.id = jobs.companyid and jobs.hr = hrs.id`;
+	let sql = `SELECT jobs.name as JOBNAME, jobs.id, companies.name as COMPANYNAME, starts,ends, salary, phone, hrs.name as HRNAME, ctags.tags FROM jobs, companies, hrs,
+
+	(SELECT LISTAGG(tags.name,',')  WITHIN GROUP (order by tags.name) as tags,  jobs.id
+	FROM jobtags,tags,jobs
+	WHERE tags.id = jobtags.tagid and jobtags.jobid = jobs.id
+	group by jobs.id
+	) ctags
+	where companies.id = jobs.companyid and jobs.hr = hrs.id and ctags.id = jobs.id
+	
+	
+	`;
 
 	connection.execute(sql, (err, result) => {
 		if (err) {
@@ -88,6 +97,7 @@ app.get('/jobs', function (req, response) {
 				responseObject.salary = i.SALARY;
 				responseObject.hrphone = i.PHONE;
 				responseObject.hrname = i.HRNAME;
+				responseObject.tags = i.TAGS;
 				arr.push(responseObject);
 			}
 		} else {
@@ -109,28 +119,41 @@ app.post('/addjob', function (req, response) {
 	nw.ends = req.body.ends;
 	nw.salary = req.body.salary;
 	nw.maxApplication = req.body.maxApplication;
-	nw.companyUsername = req.body.companyUsername;
+	nw.companyid = req.body.companyid;
 
-	sql = `select id from companies where username = '${nw.companyUsername}'`;
 
-	connection.execute(sql, (err, result) => {
-		if (err) {
-			console.error(err);
-			return;
-		}
-		nw.companyId = result.rows[0].ID;
 
-		insert = `INSERT INTO jobs (name, companyid, address, starts, ends, salary, maxapplication,hr)  VALUES('${nw.jobname}', ${nw.companyId}, '${nw.address}', TO_DATE('${nw.starts}','yyyy-mm-dd'), TO_DATE('${nw.ends}','yyyy-mm-dd'), ${nw.salary}, ${nw.maxApplication},1)`;
-		connection.execute(insert, function (err, result) {
-			if (err) {
-				console.error(err);
-				return;
-			} else {
-				responseObject.success = true;
-				response.json(responseObject);
+
+	insert = `INSERT INTO jobs (name, companyid, address, starts, ends, salary, maxapplication,hr) VALUES('${nw.jobname}', ${nw.companyid}, '${nw.address}', TO_DATE('${nw.starts}','yyyy-mm-dd'), TO_DATE('${nw.ends}','yyyy-mm-dd'), ${nw.salary}, ${nw.maxApplication},1)`;
+	connection.execute(insert, (err, result) => {
+		connection.execute(`SELECT * FROM (SELECT * FROM jobs ORDER BY id DESC	) WHERE ROWNUM = 1`, async function (err, jobresult) {
+			for (let tag of req.body.tags.split(',')) {
+				let taginsert = `insert into tags (name) values('${tag}')`;
+
+				await new Promise(async function (resolve, reject) {
+					connection.execute(taginsert, (err, x) => {
+						let selectlasttag = 'SELECT * FROM (SELECT * FROM tags ORDER BY id DESC	) WHERE ROWNUM = 1';
+						connection.execute(selectlasttag, (err, tagresult) => {
+							let jobtaginsert = `insert into jobtags (jobid,tagid) values(${jobresult.rows[0].ID},${tagresult.rows[0].ID})`;
+							connection.execute(jobtaginsert, (err, result) => {
+								if (!err) {
+									resolve();
+							
+								}
+							});
+						});
+					});
+
+
+				});
 			}
+			responseObject.success = true;
+			response.json(responseObject);
+			return;
 		});
 	});
+
+
 });
 
 app.post('/registration', function (req, response) {
@@ -233,7 +256,7 @@ app.post('/myapplications', function (req, response) {
 app.post('/incomingapplications', function (req, response) {
 	let responseObject = {};
 	let companyid = req.body.companyid;
-	
+
 	let sql = `SELECT applications.id ,applications.accepted as "status", seekers.name as "sname", jobs.name as "jname", utl_raw.cast_to_varchar2(seekers.cv) as "cv", applications.text as "comment" FROM applications,seekers,jobs WHERE jobid IN (select id from jobs where companyId = ${companyid}) and seekers.id = seekerid and jobs.id = jobid`;
 	connection.execute(sql, (err, result) => {
 		if (err) {

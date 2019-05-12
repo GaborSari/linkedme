@@ -11,7 +11,7 @@ declare var $: any;
 export class JobsComponent {
   data = {};
   user: any;
-
+  search = "";
   comment = "Comment";
   jobs = new Array<any>();
   constructor(private httpService: HttpService, private userService: UserService) {
@@ -26,7 +26,7 @@ export class JobsComponent {
 
 
   addJob() {
-    this.data['companyUsername'] = this.user.username;
+    this.data['companyid'] = this.user.id;
     this.httpService.request('addJob', this.data).subscribe(result => {
       if (result.success) {
         alert('sikeresen hozzáadva');
@@ -65,6 +65,20 @@ export class JobsComponent {
         alert('hiba');
       }
     })
+  }
+
+
+  searchbytags(){
+    let jobs = new Array<any>();
+
+
+    for(let job of this.jobs){
+      if(job.tags.indexOf(this.search) > -1){
+        jobs.push(job);
+      }
+    }
+
+    this.jobs = jobs;
   }
 
 }

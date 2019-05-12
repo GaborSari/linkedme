@@ -1,4 +1,22 @@
 
+<div class="ui grid">
+    <div class="row">
+        <div class="ten wide column">
+            <div class="ui fluid input">
+                <input type="text" placeholder="Search..." [(ngModel)]="search">
+            </div>
+
+        </div>
+        <div class="six wide column">
+            <button class="ui button" (click)="searchbytags()">
+                Keres
+            </button>
+
+        </div>
+    </div>
+</div>
+<br>
+
 <div class="ui three centered cards">
     <div class="ui card" *ngFor="let job of jobs">
         <div class="content">
@@ -29,6 +47,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="event">
+                    <div class="content">
+                        <div class="summary">
+                            Címkék: {{job.tags}}
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="extra content">
@@ -49,6 +75,10 @@
         <div class="field">
             <label>Cím</label>
             <input type="text" name="address" [(ngModel)]="data.address">
+        </div>
+        <div class="field">
+            <label>Címkék (vesszővel elválasztva)</label>
+            <input type="text" name="tags" [(ngModel)]="data.tags">
         </div>
         <div class="field">
             <label>Kezdés</label>
