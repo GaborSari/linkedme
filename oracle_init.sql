@@ -270,6 +270,17 @@ INSERT ALL
   INTO jobs (name, companyid, address, starts, ends, salary, maxapplication, hr ) VALUES ('Angular developer',1, '1 Infinite Loop Cupertino, CA 95014',TO_DATE('2019/07/09', 'yyyy/mm/dd'),TO_DATE('2019/10/09', 'yyyy/mm/dd'), 90000, 5, 1)
   INTO jobs (name, companyid, address, starts, ends, salary, maxapplication, hr ) VALUES ('Cleaning lady',2, '420 Bill Gates Av. San Fransicso, CA 43212',TO_DATE('2019/05/09', 'yyyy/mm/dd'),TO_DATE('2019/08/09', 'yyyy/mm/dd'), 45000, 3, 2)
   INTO jobs (name, companyid, address, starts, ends, salary, maxapplication, hr ) VALUES ('Chief Financial Officer',3, '2 Big Machine St. Boston, MA 95014',TO_DATE('2019/03/09', 'yyyy/mm/dd'),TO_DATE('2019/05/09', 'yyyy/mm/dd'), 140000, 1, 3)
+  INTO jobs (name, companyid, address, starts, ends, salary, maxapplication, hr ) VALUES ('Portás',4, 'USA',TO_DATE('2019/03/09', 'yyyy/mm/dd'),TO_DATE('2019/05/09', 'yyyy/mm/dd'), 14000, 1, 1)
+  INTO jobs (name, companyid, address, starts, ends, salary, maxapplication, hr ) VALUES ('Kutyasétáltató',5, 'USA',TO_DATE('2019/03/10', 'yyyy/mm/dd'),TO_DATE('2019/10/09', 'yyyy/mm/dd'), 12300, 1, 2)
+  INTO jobs (name, companyid, address, starts, ends, salary, maxapplication, hr ) VALUES ('Szakács',6, 'USA',TO_DATE('2019/02/26', 'yyyy/mm/dd'),TO_DATE('2019/08/09', 'yyyy/mm/dd'), 65300, 1, 3)
+  INTO jobs (name, companyid, address, starts, ends, salary, maxapplication, hr ) VALUES ('Tesi tanár',7, 'USA',TO_DATE('2019/05/16', 'yyyy/mm/dd'),TO_DATE('2019/07/24', 'yyyy/mm/dd'), 123567, 1, 1)
+  INTO jobs (name, companyid, address, starts, ends, salary, maxapplication, hr ) VALUES ('Sörkóstoló',8, 'USA',TO_DATE('2019/03/19', 'yyyy/mm/dd'),TO_DATE('2019/05/09', 'yyyy/mm/dd'), 9864, 1, 2)
+  INTO jobs (name, companyid, address, starts, ends, salary, maxapplication, hr ) VALUES ('Pultos',9, 'USA',TO_DATE('2019/05/09', 'yyyy/mm/dd'),TO_DATE('2019/06/09', 'yyyy/mm/dd'), 23421, 1, 3)
+  INTO jobs (name, companyid, address, starts, ends, salary, maxapplication, hr ) VALUES ('Operatőr',10, 'USA',TO_DATE('2019/10/09', 'yyyy/mm/dd'),TO_DATE('2019/12/09', 'yyyy/mm/dd'), 51241, 1, 1)
+  INTO jobs (name, companyid, address, starts, ends, salary, maxapplication, hr ) VALUES ('Betanított munka',3, 'USA',TO_DATE('2019/08/09', 'yyyy/mm/dd'),TO_DATE('2019/10/09', 'yyyy/mm/dd'), 51231, 1, 2)
+  INTO jobs (name, companyid, address, starts, ends, salary, maxapplication, hr ) VALUES ('Kőműves',1, 'USA',TO_DATE('2019/02/09', 'yyyy/mm/dd'),TO_DATE('2019/04/09', 'yyyy/mm/dd'), 85473, 1, 3)
+  INTO jobs (name, companyid, address, starts, ends, salary, maxapplication, hr ) VALUES ('Cukrász',2, 'USA',TO_DATE('2019/01/09', 'yyyy/mm/dd'),TO_DATE('2019/08/09', 'yyyy/mm/dd'), 82341, 1, 1)
+  INTO jobs (name, companyid, address, starts, ends, salary, maxapplication, hr ) VALUES ('Börtönőr',3, 'USA',TO_DATE('2019/05/09', 'yyyy/mm/dd'),TO_DATE('2019/12/09', 'yyyy/mm/dd'), 12312, 1, 2)
 SELECT * FROM dual;
 
 INSERT ALL
