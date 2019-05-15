@@ -65,8 +65,26 @@ export class JobsComponent {
         alert('hiba');
       }
     })
+
+    
   }
 
+  deleteJob(id){
+    this.data['jobid'] = id;
+    this.httpService.request('deletejob', this.data).subscribe(result => {
+      if (result.success) {
+        alert('sikeresen törölve');
+        this.httpService.request('listJobs').subscribe(jobs => {
+
+          this.jobs = new Array<any>();
+          this.jobs = jobs;
+        });
+      }
+      else {
+        alert('hiba');
+      }
+    })
+  }
 
   searchbytags(){
     let jobs = new Array<any>();

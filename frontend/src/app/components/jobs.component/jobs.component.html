@@ -19,6 +19,7 @@
 
 <div class="ui three centered cards">
     <div class="ui card" *ngFor="let job of jobs">
+
         <div class="content">
             <div class="header">{{job.jobname}}</div>
         </div>
@@ -58,7 +59,10 @@
             </div>
         </div>
         <div class="extra content">
-            <button class="ui button" (click)="showApplicationModal(job.id)">Jelentkezés</button>
+            <button *ngIf="!user.isCompany" class="ui button"
+                (click)="showApplicationModal(job.id)">Jelentkezés</button>
+            <button *ngIf="user.isCompany && user.id == job.companyid" class="ui button"
+                (click)="deleteJob(job.id)">Törlés</button>
         </div>
     </div>
 </div>

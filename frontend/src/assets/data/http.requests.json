@@ -47,6 +47,12 @@
             "method": "post",
             "url": "http://localhost:3000/decideapplication",
             "static": false
+        },
+        {
+            "name": "deletejob",
+            "method": "post",
+            "url": "http://localhost:3000/deletejob",
+            "static": false
         }
     ]
 }

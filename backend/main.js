@@ -39,12 +39,12 @@ app.post('/login', function (req, response) {
 	let responseObject = {};
 	let un = req.body.username;
 	let pw = req.body.password;
-	let sql = `SELECT username, password, id FROM seekers where USERNAME = '${un}'`;
+	let sql = `SELECT username,name, password, id FROM seekers where USERNAME = '${un}'`;
 
 	let isCompany = false;
 	if (req.body.company != undefined && req.body.company == true) {
 		isCompany = true;
-		sql = `SELECT username, password, id FROM companies where USERNAME = '${un}'`;
+		sql = `SELECT username,name, password, id FROM companies where USERNAME = '${un}'`;
 	}
 
 	connection.execute(sql, (err, result) => {
@@ -54,9 +54,17 @@ app.post('/login', function (req, response) {
 		}
 		if (result.rows.length > 0 && un == result.rows[0].USERNAME && pw == result.rows[0].PASSWORD) {
 			responseObject.success = true;
+			responseObject.name = result.rows[0].NAME;
 			responseObject.username = un;
 			responseObject.id = result.rows[0].ID;
 			responseObject.isCompany = isCompany;
+			if(!isCompany){
+				let sql = `UPDATE seekers SET lastActive = sysdate where id = ${responseObject.id}`;
+				connection.execute(sql, (err, result) => {
+
+				});
+
+			}
 		} else {
 			responseObject.success = false;
 		}
@@ -69,7 +77,7 @@ app.get('/jobs', function (req, response) {
 	// let sql = `SELECT name as JOBNAME, name as COMPANYNAME, starts, salary, phone FROM jobs, companies, hrs
 	//  where companies.id = jobs.companyid and jobs.hr = hrs.id`;
 
-	let sql = `SELECT jobs.name as JOBNAME, jobs.id, companies.name as COMPANYNAME, starts,ends, salary, phone, hrs.name as HRNAME, ctags.tags FROM jobs, companies, hrs,
+	let sql = `SELECT jobs.name as JOBNAME, jobs.id, companies.name as COMPANYNAME, companies.id as COMPANYID, starts,ends, salary, phone, hrs.name as HRNAME, ctags.tags FROM jobs, companies, hrs,
 
 	(SELECT LISTAGG(tags.name,',')  WITHIN GROUP (order by tags.name) as tags,  jobs.id
 	FROM jobtags,tags,jobs
@@ -98,6 +106,7 @@ app.get('/jobs', function (req, response) {
 				responseObject.hrphone = i.PHONE;
 				responseObject.hrname = i.HRNAME;
 				responseObject.tags = i.TAGS;
+				responseObject.companyid = i.COMPANYID;
 				arr.push(responseObject);
 			}
 		} else {
@@ -138,7 +147,7 @@ app.post('/addjob', function (req, response) {
 							connection.execute(jobtaginsert, (err, result) => {
 								if (!err) {
 									resolve();
-							
+
 								}
 							});
 						});
@@ -281,7 +290,6 @@ app.post('/decideapplication', function (req, response) {
 	let application = req.body.application;
 	let status = req.body.status;
 	let sql = `UPDATE applications SET accepted = ${status} where id = ${application}`;
-	console.log(sql);
 	connection.execute(sql, (err, result) => {
 		if (err) {
 			console.error(err);
@@ -292,6 +300,52 @@ app.post('/decideapplication', function (req, response) {
 		else {
 			responseObject.success = true;
 			response.json(responseObject);
+		}
+
+	});
+});
+
+
+app.post('/deletejob', function (req, response) {
+	let responseObject = {};
+	let jobid = req.body.jobid;
+	let sql = `DELETE from applications where jobId = ${jobid}`;
+	connection.execute(sql, (err, result) => {
+		if (err) {
+			console.error(err);
+			responseObject.success = false;
+			response.json(responseObject);
+			return;
+		}
+		else {
+			let sql = `DELETE from jobtags where jobId = ${jobid}`;
+			connection.execute(sql, (err, result) => {
+				if (err) {
+					console.error(err);
+					responseObject.success = false;
+					response.json(responseObject);
+					return;
+				}
+				else {
+					let sql = `DELETE from jobs where id = ${jobid}`;
+					connection.execute(sql, (err, result) => {
+						if (err) {
+							console.error(err);
+							responseObject.success = false;
+							response.json(responseObject);
+							return;
+						}
+						else {
+							responseObject.success = true;
+							response.json(responseObject);
+						}
+
+					});
+				}
+
+			});
+
+
 		}
 
 	});
