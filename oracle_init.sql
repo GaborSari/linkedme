@@ -190,6 +190,7 @@ INSERT ALL
   INTO tags(name) VALUES ('developer')
   INTO tags(name) VALUES ('clean')
   INTO tags(name) VALUES ('CFO')
+  INTO tags(name) VALUES ('WORK')
 SELECT * FROM dual;
 
 INSERT ALL
@@ -299,6 +300,17 @@ INSERT ALL
   INTO jobtags(jobid, tagid) VALUES (1,1)
   INTO jobtags(jobid, tagid) VALUES (2,2)
   INTO jobtags(jobid, tagid) VALUES (3,3)
+  INTO jobtags(jobid, tagid) VALUES (4,4)
+  INTO jobtags(jobid, tagid) VALUES (5,4)
+  INTO jobtags(jobid, tagid) VALUES (6,4)
+  INTO jobtags(jobid, tagid) VALUES (7,4)
+  INTO jobtags(jobid, tagid) VALUES (8,4)
+  INTO jobtags(jobid, tagid) VALUES (9,4)
+  INTO jobtags(jobid, tagid) VALUES (10,4)
+  INTO jobtags(jobid, tagid) VALUES (11,4)
+  INTO jobtags(jobid, tagid) VALUES (12,4)
+  INTO jobtags(jobid, tagid) VALUES (13,4)
+  INTO jobtags(jobid, tagid) VALUES (14,4)
 SELECT * FROM dual;
 
 
