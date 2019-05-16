@@ -69,6 +69,20 @@
 
 <div *ngIf="user.isCompany">
 
+    <table>
+        <tr>
+            <th>Típus</th>
+            <th>db</th>
+        </tr>
+        <tr *ngFor="let t of tagtable">
+            <td>
+                {{t.NAME}}
+            </td>
+            <td>
+                {{t.COUNT}}
+            </td>
+        </tr>
+    </table>
     <div class="ui divider"></div>
     <h4>Állás meghirdetés</h4>
     <form class="ui form">

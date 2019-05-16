@@ -13,10 +13,16 @@ export class JobsComponent {
   user: any;
   search = "";
   comment = "Comment";
+  tagtable: any;
   jobs = new Array<any>();
   constructor(private httpService: HttpService, private userService: UserService) {
     this.userService.user.subscribe(user => {
       this.user = user;
+      if(user.isCompany){
+        this.httpService.request('tagtable').subscribe(tag => {
+          this.tagtable = tag;
+        });
+      }
     });
     this.httpService.request('listJobs').subscribe(jobs => {
       this.jobs = jobs;

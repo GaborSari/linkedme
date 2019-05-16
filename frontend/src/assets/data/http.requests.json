@@ -53,6 +53,18 @@
             "method": "post",
             "url": "http://localhost:3000/deletejob",
             "static": false
+        },
+        {
+            "name": "tagtable",
+            "method": "get",
+            "url": "http://localhost:3000/tagtable",
+            "static": false
+        },
+        {
+            "name": "sum",
+            "method": "get",
+            "url": "http://localhost:3000/sum",
+            "static": false
         }
     ]
 }

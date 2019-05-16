@@ -7,9 +7,11 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class HomeComponent {
 
-
-  constructor(private httpService:HttpService,private userService:UserService) {
-
+  sum: any;
+  constructor(private httpService: HttpService, private userService: UserService) {
+    this.httpService.request('sum').subscribe(tag => {
+      this.sum = tag;
+    });
   }
 
 }

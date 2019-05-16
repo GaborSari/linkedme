@@ -74,10 +74,11 @@ app.post('/login', function (req, response) {
 
 app.get('/jobs', function (req, response) {
 	let arr = [];
-	// let sql = `SELECT name as JOBNAME, name as COMPANYNAME, starts, salary, phone FROM jobs, companies, hrs
-	//  where companies.id = jobs.companyid and jobs.hr = hrs.id`;
 
-	let sql = `SELECT jobs.name as JOBNAME, jobs.id, companies.name as COMPANYNAME, companies.id as COMPANYID, starts,ends, salary, phone, hrs.name as HRNAME, ctags.tags FROM jobs, companies, hrs,
+
+	let sql = `SELECT jobs.name as JOBNAME, jobs.id, companies.name as COMPANYNAME, companies.id as COMPANYID, starts,ends, salary, phone, 
+	hrs.name as HRNAME, ctags.tags 
+	FROM jobs, companies, hrs,
 
 	(SELECT LISTAGG(tags.name,',')  WITHIN GROUP (order by tags.name) as tags,  jobs.id
 	FROM jobtags,tags,jobs
@@ -133,9 +134,12 @@ app.post('/addjob', function (req, response) {
 
 
 
-	insert = `INSERT INTO jobs (name, companyid, address, starts, ends, salary, maxapplication,hr) VALUES('${nw.jobname}', ${nw.companyid}, '${nw.address}', TO_DATE('${nw.starts}','yyyy-mm-dd'), TO_DATE('${nw.ends}','yyyy-mm-dd'), ${nw.salary}, ${nw.maxApplication},1)`;
+	insert = `INSERT INTO jobs (name, companyid, address, starts, ends, salary, maxapplication,hr) 
+	VALUES('${nw.jobname}', ${nw.companyid}, '${nw.address}', TO_DATE('${nw.starts}','yyyy-mm-dd'), T
+	O_DATE('${nw.ends}','yyyy-mm-dd'), ${nw.salary}, ${nw.maxApplication},1)`;
 	connection.execute(insert, (err, result) => {
-		connection.execute(`SELECT * FROM (SELECT * FROM jobs ORDER BY id DESC	) WHERE ROWNUM = 1`, async function (err, jobresult) {
+		connection.execute(`SELECT * FROM (SELECT * FROM jobs ORDER BY id DESC	) 
+		WHERE ROWNUM = 1`, async function (err, jobresult) {
 			for (let tag of req.body.tags.split(',')) {
 				let taginsert = `insert into tags (name) values('${tag}')`;
 
@@ -178,14 +182,16 @@ app.post('/registration', function (req, response) {
 		nw.isCompany = false;
 		nw.name = req.body.name;
 		sql = `SELECT username FROM seekers where USERNAME = '${nw.username}'`;
-		insert = `INSERT INTO seekers (username, password, birth, name, cv)  VALUES('${nw.username}', '${nw.password}', TO_DATE('${nw.birth}','yyyy-mm-dd'), '${nw.name}', utl_raw.cast_to_raw('${nw.cv}'))`;
+		insert = `INSERT INTO seekers (username, password, birth, name, cv)  
+		VALUES('${nw.username}', '${nw.password}', TO_DATE('${nw.birth}','yyyy-mm-dd'), '${nw.name}', utl_raw.cast_to_raw('${nw.cv}'))`;
 	} else {
 		nw.isCompany = req.body.isCompany;
 		nw.address = req.body.address;
 		nw.webpage = req.body.webpage;
 		nw.details = req.body.details;
 		sql = `SELECT username FROM companies where USERNAME = '${nw.username}'`;
-		insert = `INSERT INTO companies (username, password, address, webpage, details)  VALUES('${nw.username}', '${nw.password}', '${nw.address}', '${nw.webpage}', '${nw.details}')`;
+		insert = `INSERT INTO companies (username, password, address, webpage, details)  
+		VALUES('${nw.username}', '${nw.password}', '${nw.address}', '${nw.webpage}', '${nw.details}')`;
 	}
 	connection.execute(sql, (err, result) => {
 		if (err) {
@@ -242,7 +248,8 @@ app.post('/application', function (req, response) {
 app.post('/myapplications', function (req, response) {
 	let responseObject = {};
 	let seekerid = req.body.seekerid;
-	let sql = `SELECT accepted, jobs.name as jname  FROM applications, jobs WHERE seekerid = ${seekerid} and jobs.id = jobId`;
+	let sql = `SELECT accepted, jobs.name as jname  FROM applications, jobs 
+	WHERE seekerid = ${seekerid} and jobs.id = jobId`;
 
 	connection.execute(sql, (err, result) => {
 		if (err) {
@@ -266,7 +273,10 @@ app.post('/incomingapplications', function (req, response) {
 	let responseObject = {};
 	let companyid = req.body.companyid;
 
-	let sql = `SELECT applications.id ,applications.accepted as "status", seekers.name as "sname", jobs.name as "jname", utl_raw.cast_to_varchar2(seekers.cv) as "cv", applications.text as "comment" FROM applications,seekers,jobs WHERE jobid IN (select id from jobs where companyId = ${companyid}) and seekers.id = seekerid and jobs.id = jobid`;
+	let sql = `SELECT applications.id ,applications.accepted as "status", seekers.name as "sname", jobs.name as "jname", 
+	utl_raw.cast_to_varchar2(seekers.cv) as "cv", applications.text as "comment" 
+	FROM applications,seekers,jobs 
+	WHERE jobid IN (select id from jobs where companyId = ${companyid}) and seekers.id = seekerid and jobs.id = jobid`;
 	connection.execute(sql, (err, result) => {
 		if (err) {
 			console.error(err);
@@ -352,3 +362,48 @@ app.post('/deletejob', function (req, response) {
 });
 
 
+app.get('/tagtable', function (req, response) {
+	let responseObject = {};
+	let sql = `select count,tags.name from (select tagid, count(tagid) as count
+	from jobtags
+	group by tagid) c, tags where c.tagid = tags.id`;
+	connection.execute(sql, (err, result) => {
+		if (err) {
+			console.error(err);
+			responseObject.success = false;
+			response.json(responseObject);
+			return;
+		}
+		else {
+			responseObject.success = true;
+			response.json(result.rows);
+		}
+
+	});
+});
+
+
+
+app.get('/sum', function (req, response) {
+	let responseObject = {};
+	let sql = `select count(jobs.id) as count, 'jobs' as name from jobs
+	UNION ALL
+	select count(seekers.id),'seekers' from seekers
+	UNION ALL
+	select count(companies.id),'companies' from companies
+	
+	`;
+	connection.execute(sql, (err, result) => {
+		if (err) {
+			console.error(err);
+			responseObject.success = false;
+			response.json(responseObject);
+			return;
+		}
+		else {
+			responseObject.success = true;
+			response.json(result.rows);
+		}
+
+	});
+});
